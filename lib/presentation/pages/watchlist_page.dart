@@ -1,7 +1,6 @@
 import 'package:ditonton/presentation/pages/tv/watchlist_tvs_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_movies_page.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class WatchListPage extends StatelessWidget {
   static const ROUTE_NAME = '/watchlist';
