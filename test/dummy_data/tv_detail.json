@@ -1,0 +1,93 @@
+{
+  "adult": false,
+  "backdrop_path": "/natwd6L8zzDMCTeMqDE7ZYLdRFM.jpg",
+  "created_by": [],
+  "episode_run_time": [
+    25
+  ],
+  "first_air_date": "2019-02-23",
+  "genres": [
+    {
+      "id": 18,
+      "name": "Drama"
+    }
+  ],
+  "homepage": "http://www.imbc.com/broad/tv/drama/loveinsadness/",
+  "id": 87022,
+  "in_production": false,
+  "languages": [
+    "ko"
+  ],
+  "last_air_date": "2019-04-27",
+  "last_episode_to_air": {
+    "air_date": "2019-04-27",
+    "episode_number": 40,
+    "id": 1773297,
+    "name": "Gentian",
+    "overview": "In an unstable state, In Wook returns home and confronts his father for what he had made him and for his mother's death. He then makes his way to Jung Won's house and abducts Ma Ri. When he tells Ma Ri that this is the only way for them to be together with a gun held towards them, Jung Won appears.",
+    "production_code": "",
+    "runtime": 25,
+    "season_number": 1,
+    "show_id": 87022,
+    "still_path": null,
+    "vote_average": 0.0,
+    "vote_count": 0
+  },
+  "name": "Love in Sadness",
+  "next_episode_to_air": null,
+  "networks": [
+    {
+      "id": 97,
+      "name": "MBC",
+      "logo_path": "/pOSCKaZhndUFYtxHXjQOV6xJi1s.png",
+      "origin_country": "KR"
+    }
+  ],
+  "number_of_episodes": 40,
+  "number_of_seasons": 1,
+  "origin_country": [
+    "KR"
+  ],
+  "original_language": "ko",
+  "original_name": "슬플 때 사랑한다",
+  "overview": "The essence of love is fading and is evermore harder to do.",
+  "popularity": 4.566,
+  "poster_path": "/hNqlMpmzdQywzRSEk2AcTSTUrQP.jpg",
+  "production_companies": [
+    {
+      "id": 115704,
+      "logo_path": null,
+      "name": "DK E&M",
+      "origin_country": "KR"
+    }
+  ],
+  "production_countries": [
+    {
+      "iso_3166_1": "KR",
+      "name": "South Korea"
+    }
+  ],
+  "seasons": [
+    {
+      "air_date": "2019-02-23",
+      "episode_count": 40,
+      "id": 119258,
+      "name": "Season 1",
+      "overview": "",
+      "poster_path": "/dzMP2bhMWYvSVI3YbvOaEJXwB1y.jpg",
+      "season_number": 1
+    }
+  ],
+  "spoken_languages": [
+    {
+      "english_name": "Korean",
+      "iso_639_1": "ko",
+      "name": "한국어/조선말"
+    }
+  ],
+  "status": "Ended",
+  "tagline": "",
+  "type": "Scripted",
+  "vote_average": 7.0,
+  "vote_count": 1
+}
