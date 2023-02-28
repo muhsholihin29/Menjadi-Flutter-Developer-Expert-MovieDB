@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import '../../../domain/entities/tv.dart';
 import '../../provider/tv/tv_list_notifier.dart';
 import '../watchlist_page.dart';
+import 'on_the_air_tvs_page.dart';
 
 class HomeTvPage extends StatefulWidget {
   static const ROUTE_NAME = '/tv-series';
@@ -93,9 +94,10 @@ class _HomeTvPageState extends State<HomeTvPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Now Playing',
-                style: kHeading6,
+              _buildSubHeading(
+                title: 'Now Playing',
+                onTap: () =>
+                    Navigator.pushNamed(context, OnTheAirTvsPage.ROUTE_NAME),
               ),
               Consumer<TvListNotifier>(builder: (context, data, child) {
                 final state = data.onTheAirState;

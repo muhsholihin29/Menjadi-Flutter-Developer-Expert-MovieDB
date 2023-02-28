@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:ditonton/data/models/genre_model.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../domain/entities/season.dart';
 import '../../domain/entities/tv_detail.dart';
 
 TvDetailResponse tvDetailFromJson(String str) =>
@@ -45,7 +46,7 @@ class TvDetailResponse extends Equatable {
   final String overview;
   final double popularity;
   final String? posterPath;
-  final List<Season> seasons;
+  final List<SeasonModel> seasons;
   final String status;
   final String tagline;
   final double voteAverage;
@@ -67,8 +68,8 @@ class TvDetailResponse extends Equatable {
         overview: json["overview"],
         popularity: json["popularity"]?.toDouble(),
         posterPath: json["poster_path"],
-        seasons:
-            List<Season>.from(json["seasons"].map((x) => Season.fromJson(x))),
+        seasons: List<SeasonModel>.from(
+            json["seasons"].map((x) => SeasonModel.fromJson(x))),
         status: json["status"],
         tagline: json["tagline"],
         voteAverage: json["vote_average"]?.toDouble(),
@@ -111,7 +112,7 @@ class TvDetailResponse extends Equatable {
         overview: overview,
         popularity: popularity,
         posterPath: posterPath,
-        seasons: seasons,
+        seasons: this.seasons.map((season) => season.toEntity()).toList(),
         status: status,
         voteAverage: voteAverage,
         voteCount: voteCount);
@@ -139,8 +140,8 @@ class TvDetailResponse extends Equatable {
       ];
 }
 
-class Season extends Equatable {
-  Season({
+class SeasonModel extends Equatable {
+  SeasonModel({
     required this.airDate,
     required this.episodeCount,
     required this.id,
@@ -158,14 +159,14 @@ class Season extends Equatable {
   final String? posterPath;
   final int seasonNumber;
 
-  factory Season.fromJson(Map<String, dynamic> json) => Season(
-        airDate: json["air_date"],
-        episodeCount: json["episode_count"],
+  factory SeasonModel.fromJson(Map<String, dynamic> json) => SeasonModel(
+        airDate: json["air_date"] ?? '',
+        episodeCount: json["episode_count"] ?? '',
         id: json["id"],
         name: json["name"],
         overview: json["overview"],
         posterPath: json["poster_path"],
-        seasonNumber: json["season_number"],
+        seasonNumber: json["season_number"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -188,4 +189,16 @@ class Season extends Equatable {
         posterPath,
         seasonNumber,
       ];
+
+  Season toEntity() {
+    return Season(
+      airDate: this.airDate,
+      episodeCount: this.episodeCount,
+      id: this.id,
+      name: this.name,
+      overview: this.overview,
+      posterPath: this.posterPath,
+      seasonNumber: this.seasonNumber,
+    );
+  }
 }

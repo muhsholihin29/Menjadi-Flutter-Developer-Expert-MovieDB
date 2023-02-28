@@ -1,6 +1,6 @@
+import 'package:ditonton/domain/entities/season.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../data/models/tv_detail_model.dart';
 import 'genre.dart';
 
 class TvDetail extends Equatable {
