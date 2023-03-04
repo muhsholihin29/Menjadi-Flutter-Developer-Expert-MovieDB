@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/genre.dart';
 import 'package:ditonton/domain/entities/tv.dart';
 import 'package:ditonton/domain/entities/tv_detail.dart';
+import 'package:ditonton/presentation/cubit/tv/tv_detail_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:provider/provider.dart';
 
-import '../../provider/tv/tv_detail_notifier.dart';
+import '../../cubit/tv/tv_watchlist_cubit.dart';
 
 class TvDetailPage extends StatefulWidget {
   static const ROUTE_NAME = '/detail_tv';
@@ -26,33 +26,32 @@ class _TvDetailPageState extends State<TvDetailPage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      Provider.of<TvDetailNotifier>(context, listen: false)
-          .fetchTvDetail(widget.id);
-      Provider.of<TvDetailNotifier>(context, listen: false)
-          .loadWatchlistStatus(widget.id);
+      context.read<TvDetailCubit>().fetchTvDetail(widget.id);
+      context.read<TvWatchlistCubit>().loadWatchlistStatus(widget.id);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<TvDetailNotifier>(
-        builder: (context, provider, child) {
-          if (provider.tvState == RequestState.Loading) {
+      body: BlocBuilder<TvDetailCubit, TvDetailState>(
+        builder: (context, state) {
+          if (state is TvDetailLoading) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          } else if (provider.tvState == RequestState.Loaded) {
-            final tv = provider.tv;
+          } else if (state is DetailHasData) {
+            final tv = state.result;
             return SafeArea(
               child: DetailContent(
                 tv,
-                provider.tvRecommendations,
-                provider.isAddedToWatchlist,
+                state.resultRecommendation,
               ),
             );
+          } else if (state is TvDetailError) {
+            return Text(state.message);
           } else {
-            return Text(provider.message);
+            return Text('');
           }
         },
       ),
@@ -107,9 +106,9 @@ class TvList extends StatelessWidget {
 class DetailContent extends StatelessWidget {
   final TvDetail tv;
   final List<Tv> recommendations;
-  final bool isAddedWatchlist;
+  bool isAddedWatchlist = false;
 
-  DetailContent(this.tv, this.recommendations, this.isAddedWatchlist);
+  DetailContent(this.tv, this.recommendations);
 
   @override
   Widget build(BuildContext context) {
@@ -151,51 +150,47 @@ class DetailContent extends StatelessWidget {
                               tv.name,
                               style: kHeading5,
                             ),
-                            ElevatedButton(
-                              onPressed: () async {
-                                if (!isAddedWatchlist) {
-                                  await Provider.of<TvDetailNotifier>(context,
-                                          listen: false)
-                                      .addWatchlist(tv);
-                                } else {
-                                  await Provider.of<TvDetailNotifier>(context,
-                                          listen: false)
-                                      .removeFromWatchlist(tv);
-                                }
+                            BlocBuilder<TvWatchlistCubit, TvWatchlistState>(
+                                builder: (context, state) {
+                              if (state is WatchlistStatusHasData) {
+                                isAddedWatchlist = state.result;
+                              }
+                              return ElevatedButton(
+                                onPressed: () async {
+                                  if (!isAddedWatchlist) {
+                                    context
+                                        .read<TvWatchlistCubit>()
+                                        .addWatchlist(tv);
+                                  } else {
+                                    context
+                                        .read<TvWatchlistCubit>()
+                                        .deleteWatchlist(tv);
+                                  }
 
-                                final message = Provider.of<TvDetailNotifier>(
-                                        context,
-                                        listen: false)
-                                    .watchlistMessage;
-
-                                if (message ==
-                                        TvDetailNotifier
-                                            .watchlistAddSuccessMessage ||
-                                    message ==
-                                        TvDetailNotifier
-                                            .watchlistRemoveSuccessMessage) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(message)));
-                                } else {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          content: Text(message),
-                                        );
-                                      });
-                                }
-                              },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  isAddedWatchlist
-                                      ? Icon(Icons.check)
-                                      : Icon(Icons.add),
-                                  Text('Watchlist'),
-                                ],
-                              ),
-                            ),
+                                  if (state is TvWatchlistError) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            content: Text(state.message),
+                                          );
+                                        });
+                                  } else if (state is WatchlistMessageHasData) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(state.result)));
+                                  }
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    isAddedWatchlist
+                                        ? Icon(Icons.check)
+                                        : Icon(Icons.add),
+                                    Text('Watchlist'),
+                                  ],
+                                ),
+                              );
+                            }),
                             Text(
                               _showGenres(tv.genres),
                             ),
@@ -254,21 +249,19 @@ class DetailContent extends StatelessWidget {
                               'Recommendations',
                               style: kHeading6,
                             ),
-                            Consumer<TvDetailNotifier>(
-                              builder: (context, data, child) {
-                                if (data.recommendationState ==
-                                    RequestState.Loading) {
+                            BlocBuilder<TvDetailCubit, TvDetailState>(
+                              builder: (context, state) {
+                                if (state is TvDetailLoading) {
                                   return Center(
                                     child: CircularProgressIndicator(),
                                   );
-                                } else if (data.recommendationState ==
-                                    RequestState.Error) {
-                                  return Text(data.message);
-                                } else if (data.recommendationState ==
-                                    RequestState.Loaded) {
+                                } else if (state is TvDetailError) {
+                                  return Text(state.message);
+                                } else if (state is DetailHasData) {
                                   return Container(
                                       height: 150,
-                                      child: TvList(recommendations, false));
+                                      child: TvList(
+                                          state.resultRecommendation, false));
                                 } else {
                                   return Container();
                                 }
@@ -324,5 +317,4 @@ class DetailContent extends StatelessWidget {
 
     return result.substring(0, result.length - 2);
   }
-
 }

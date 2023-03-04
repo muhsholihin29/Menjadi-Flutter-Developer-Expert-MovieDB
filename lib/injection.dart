@@ -22,6 +22,11 @@ import 'package:ditonton/domain/usecases/tv/get_tv_detail.dart';
 import 'package:ditonton/domain/usecases/tv/get_tv_recommendations.dart';
 import 'package:ditonton/domain/usecases/tv/save_watchlist_tv.dart';
 import 'package:ditonton/domain/usecases/tv/search_tvs.dart';
+import 'package:ditonton/presentation/bloc/search_bloc.dart';
+import 'package:ditonton/presentation/cubit/movie/movie_detail_cubit.dart';
+import 'package:ditonton/presentation/cubit/movie/movie_watchlist_cubit.dart';
+import 'package:ditonton/presentation/cubit/tv/tv_detail_cubit.dart';
+import 'package:ditonton/presentation/cubit/tv/tv_watchlist_cubit.dart';
 import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
@@ -124,6 +129,37 @@ void init() {
   locator.registerFactory(
     () => WatchlistTvNotifier(
       getWatchlistTvs: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => SearchBloc(
+      locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => TvDetailCubit(
+      getTvDetail: locator(),
+      getTvRecommendations: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => TvWatchlistCubit(
+      getWatchListStatus: locator(),
+      saveWatchlist: locator(),
+      removeWatchlist: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => MovieDetailCubit(
+      getMovieDetail: locator(),
+      getMovieRecommendations: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => MovieWatchlistCubit(
+      getWatchListStatus: locator(),
+      saveWatchlist: locator(),
+      removeWatchlist: locator(),
     ),
   );
 

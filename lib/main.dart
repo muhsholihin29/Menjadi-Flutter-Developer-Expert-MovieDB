@@ -1,6 +1,11 @@
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/injection.dart' as di;
+import 'package:ditonton/presentation/bloc/search_bloc.dart';
+import 'package:ditonton/presentation/cubit/movie/movie_detail_cubit.dart';
+import 'package:ditonton/presentation/cubit/movie/movie_watchlist_cubit.dart';
+import 'package:ditonton/presentation/cubit/tv/tv_detail_cubit.dart';
+import 'package:ditonton/presentation/cubit/tv/tv_watchlist_cubit.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
 import 'package:ditonton/presentation/pages/home_movie_page.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
@@ -31,6 +36,7 @@ import 'package:ditonton/presentation/provider/tv/watchlist_tv_notifier.dart';
 import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -83,6 +89,21 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<OnTheAirTvsNotifier>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<SearchBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<TvDetailCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<TvWatchlistCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<MovieDetailCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<MovieWatchlistCubit>(),
         ),
       ],
       child: MaterialApp(

@@ -3,7 +3,6 @@ import 'package:ditonton/domain/entities/tv.dart';
 import 'package:ditonton/domain/entities/tv_detail.dart';
 import 'package:ditonton/domain/usecases/tv/remove_watchlist_tv.dart';
 import 'package:ditonton/domain/usecases/tv/save_watchlist_tv.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../domain/usecases/tv/get_tv_detail.dart';
