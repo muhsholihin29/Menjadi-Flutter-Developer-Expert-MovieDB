@@ -1,14 +1,17 @@
+import 'package:ditonton/domain/entities/movie.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/entities/movie_detail.dart';
-import '../../../domain/usecases/get_watchlist_movie_status.dart';
-import '../../../domain/usecases/remove_watchlist_movie.dart';
-import '../../../domain/usecases/save_watchlist_movie.dart';
+import '../../../domain/usecases/movie/get_watchlist_movie_status.dart';
+import '../../../domain/usecases/movie/get_watchlist_movies.dart';
+import '../../../domain/usecases/movie/remove_watchlist_movie.dart';
+import '../../../domain/usecases/movie/save_watchlist_movie.dart';
 
 part 'movie_watchlist_state.dart';
 
 class MovieWatchlistCubit extends Cubit<MovieWatchlistState> {
+  final GetWatchlistMovies getWatchlistMovies;
   final GetWatchListMovieStatus getWatchListStatus;
   final SaveWatchlistMovie saveWatchlist;
   final RemoveWatchlistMovie removeWatchlist;
@@ -18,6 +21,7 @@ class MovieWatchlistCubit extends Cubit<MovieWatchlistState> {
   bool get isAddedToWatchlist => _isAddedtoWatchlist;
 
   MovieWatchlistCubit({
+    required this.getWatchlistMovies,
     required this.getWatchListStatus,
     required this.saveWatchlist,
     required this.removeWatchlist,
@@ -40,6 +44,14 @@ class MovieWatchlistCubit extends Cubit<MovieWatchlistState> {
       (value) => emit(MovieWatchlistMessageHasData(value)),
     );
     await loadWatchlistStatus(movie.id);
+  }
+
+  Future<void> getWatchlist() async {
+    final result = await getWatchlistMovies.execute();
+    result.fold(
+          (failure) => emit(MovieWatchlistError(failure.message)),
+          (value) => emit(MovieWatchlistHasData(value)),
+    );
   }
 
   Future<void> loadWatchlistStatus(int id) async {

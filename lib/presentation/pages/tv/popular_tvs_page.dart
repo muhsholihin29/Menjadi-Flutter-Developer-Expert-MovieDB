@@ -1,8 +1,7 @@
-import 'package:ditonton/common/state_enum.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../provider/tv/popular_tvs_notifier.dart';
+import '../../cubit/tv/popular_tvs_cubit.dart';
 import '../../widgets/tv_card_list.dart';
 
 class PopularTvsPage extends StatefulWidget {
@@ -17,8 +16,7 @@ class _PopularTvsPageState extends State<PopularTvsPage> {
   void initState() {
     super.initState();
     Future.microtask(() =>
-        Provider.of<PopularTvsNotifier>(context, listen: false)
-            .fetchPopularTvs());
+        context.read<PopularTvsCubit>().fetchPopularTvs());
   }
 
   @override
@@ -29,24 +27,29 @@ class _PopularTvsPageState extends State<PopularTvsPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<PopularTvsNotifier>(
-          builder: (context, data, child) {
-            if (data.state == RequestState.Loading) {
+        child: BlocBuilder<PopularTvsCubit, PopularTvsState>(
+          builder: (context, state) {
+            if (state is PopularTvsLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.state == RequestState.Loaded) {
+            } else if (state is PopularTvsHasData) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final tv = data.tvs[index];
+                  final tv = state.result[index];
                   return TvCard(tv);
                 },
-                itemCount: data.tvs.length,
+                itemCount: state.result.length,
+              );
+            } else if (state is PopularTvsError) {
+              return Center(
+                key: Key('error_message'),
+                child: Text(state.message),
               );
             } else {
               return Center(
                 key: Key('error_message'),
-                child: Text(data.message),
+                child: Text('Anda kurang beruntung'),
               );
             }
           },

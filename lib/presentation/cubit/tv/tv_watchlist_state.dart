@@ -29,6 +29,15 @@ class WatchlistMessageHasData extends TvWatchlistState {
   List<Object> get props => [result];
 }
 
+class WatchlistHasData extends TvWatchlistState {
+  final List<Tv> result;
+
+  WatchlistHasData(this.result);
+
+  @override
+  List<Object> get props => [result];
+}
+
 class WatchlistStatusHasData extends TvWatchlistState {
   final bool result;
 

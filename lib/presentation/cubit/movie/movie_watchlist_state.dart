@@ -29,6 +29,15 @@ class MovieWatchlistMessageHasData extends MovieWatchlistState {
   List<Object> get props => [result];
 }
 
+class MovieWatchlistHasData extends MovieWatchlistState {
+  final List<Movie> result;
+
+  MovieWatchlistHasData(this.result);
+
+  @override
+  List<Object> get props => [result];
+}
+
 class MovieWatchlistStatusHasData extends MovieWatchlistState {
   final bool result;
 

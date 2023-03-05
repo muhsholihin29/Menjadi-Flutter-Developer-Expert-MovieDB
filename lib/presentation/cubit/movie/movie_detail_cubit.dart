@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/entities/movie.dart';
 import '../../../domain/entities/movie_detail.dart';
-import '../../../domain/usecases/get_movie_detail.dart';
-import '../../../domain/usecases/get_movie_recommendations.dart';
+import '../../../domain/usecases/movie/get_movie_detail.dart';
+import '../../../domain/usecases/movie/get_movie_recommendations.dart';
 
 part 'movie_detail_state.dart';
 
